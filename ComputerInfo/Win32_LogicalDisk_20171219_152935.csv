@@ -1,0 +1,3 @@
+Win32_LogicalDisk: C: (DeviceID = "C:")
+Win32_LogicalDisk: D: (DeviceID = "D:")
+Win32_LogicalDisk: E: (DeviceID = "E:")

@@ -1,0 +1,8 @@
+    
+Win32_Bios
+Win32_Product
+Win32_LogicalDisk
+Win32_ComputerSystem
+Win32_UserAccount
+Win32_NetworkAdapter
+Win32_Process
