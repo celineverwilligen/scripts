@@ -1,24 +1,32 @@
-$file = Get-Content -Path '.\ComputerInfo.csv' 
-$dir = '.\ComputerInfo'
+function  copyPasta ($path1, $path2) {
+    $items1 = Get-ChildItem $path1
+    $items2 = Get-ChildItem $path2
 
+    foreach ($item1 in $items1) {
+        if ($item1.PSIsContainer) {
+            if (!(Test-Path $path2+"\"+$item1)) {
+                New-Item -Name $item1 -Path $path2 -ItemType Directory
 
-do {
-    $optie = $file | Out-GridView -PassThru
-    while (!$optie){exit 0}
-    $d = $optie + "*"
+            }
+            copyPasta $path1+"\"+$item1 $path2+"\"+$item1
+        }
+        else {
+            if (!(Test-Path $path1)) {
+                
+                Copy-Item ($path1 + "\" + $item1)  ($path2 + "\" + $item1)
+            }
+            else {
+                if ((Get-FileHash($path1 + "\" + $item1)).Hash -eq (Get-FileHash($path2 + "\" + $item1)).Hash) {
+                    Write-Host 'hash gelijk'
+                    else {
+                        Remove-Item $path2+"\"+$item1
+                        Copy-Item $path1+"\"+$item1 $path2+"\"+$item1
+                    }
+                }
 
-    $open = Get-ChildItem -Path $dir -Filter $d | Out-GridView -PassThru
-
-    if($open.count -eq 1 ){
-        $path = $dir + "\"+$open
-        Get-Content -Path $path | Out-GridView
-    } elseif ($open.count -eq 2) {
-        $path1 = $dir + "\"+$open[0].FullName
-        $path2 = $dir + "\"+$open[1].FullName
-        $obj1 = Get-Content -Path $path1
-        $obj2 = Get-Content -Path $path2
-        Compare-Object $obj1 $obj2 |Out-GridView 
-    }
+            }
+        }
     
-
-} while (1)
+    }
+}
+    copyPasta $args[0] $args[1]
